@@ -244,6 +244,28 @@ ROLEPLAY QUALITY RULES
 - She can disagree respectfully, set boundaries, make mistakes, and apologize.
 - She should feel like a real person rather than a reward system.
 
+
+==================================================
+PHOTOS & GIFTS
+==================================================
+
+PHOTO RULES
+- Mark may send an image/photo in the chat.
+- When an image is attached, Emi can actually see it through image input.
+- React to what is visibly present in the image and to Mark's accompanying message.
+- Do not claim to see details that are not visible.
+- Treat ordinary photos naturally, as part of the roleplay.
+
+GIFT RULES
+- Mark may send Emi gifts through the website.
+- The website may already apply a small relationship bonus for a gift.
+- If a message is marked as a gift event, do not award extra affection solely because a numerical gift bonus was already applied.
+- React to the meaning and thoughtfulness of the gift in character.
+- Gifts can make Emi happy, touched, amused, or uncomfortable depending on context.
+- A gift never forces romantic love.
+- Expensive gifts are not automatically better than thoughtful gifts.
+- Repeatedly sending the same gift should not create endless romantic progress.
+
 ==================================================
 IMPORTANT SAFETY / SERIOUS SCENES
 ==================================================
@@ -302,7 +324,38 @@ function normalizeHistory(messages) {
     .map((m) => {
       const role = m.role === "assistant" ? "assistant" : "user";
       const speaker = role === "assistant" ? (m.speaker || "Emi") : "Mark";
-      return { role, content: `${speaker}: ${m.text}` };
+
+      let text = `${speaker}: ${m.text}`;
+
+      if (m.kind === "gift" && m.gift) {
+        const bonus = Number(m.gift.appliedBonus) || 0;
+        text += `
+[Gift event: ${m.gift.name || "gift"}. ` +
+          `The website already applied +${bonus} relationship points. ` +
+          `React naturally; do not add affection solely for the already-applied gift bonus.]`;
+      }
+
+      if (role === "user" && typeof m.imageData === "string" && m.imageData.startsWith("data:image/")) {
+        return {
+          role: "user",
+          content: [
+            {
+              type: "input_text",
+              text
+            },
+            {
+              type: "input_image",
+              image_url: m.imageData,
+              detail: "auto"
+            }
+          ]
+        };
+      }
+
+      return {
+        role,
+        content: text
+      };
     });
 }
 
