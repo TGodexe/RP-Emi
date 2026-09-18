@@ -82,3 +82,29 @@ from Vercel if you no longer use any image API elsewhere.
 3. Wait for Vercel deployment
 4. Hard refresh with Ctrl+Shift+R
 5. Try the Scene button
+
+
+## Critical fix in this build
+
+The previous build had a JavaScript syntax error in `buildScenePrompt()`:
+
+```js
+.join("
+");
+```
+
+It is now correctly:
+
+```js
+.join("\n");
+```
+
+That single syntax error prevented the entire `app.js` file from running, which is why:
+- the opening Emi message did not render
+- Current Story was blank
+- Scene did nothing
+- Gift did nothing
+- Settings did nothing
+- Send did nothing
+
+This build also cache-busts `app.js` and `style.css` with `?v=4`.

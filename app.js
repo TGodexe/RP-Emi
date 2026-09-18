@@ -589,8 +589,7 @@ function buildScenePrompt() {
       const speaker = m.role === "user" ? "Mark" : (m.speaker || "Emi");
       return `${speaker}: ${m.text}`;
     })
-    .join("
-");
+    .join("\n");
 
   const direction = sceneNote.value.trim();
 

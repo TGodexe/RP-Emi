@@ -1,0 +1,1 @@
+Fixed app.js syntax error in buildScenePrompt(). Upload all files and redeploy.
