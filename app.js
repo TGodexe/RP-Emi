@@ -19,6 +19,8 @@ const giftBtn = $("giftBtn");
 const giftDialog = $("giftDialog");
 const giftGrid = $("giftGrid");
 
+const closeSceneBtn = $("closeSceneBtn");
+const cancelSceneBtn = $("cancelSceneBtn");
 const sceneBtn = $("sceneBtn");
 const sceneDialog = $("sceneDialog");
 const sceneForm = $("sceneForm");
