@@ -1,5 +1,5 @@
 const IMAGE_MODEL =
-  process.env.OPENAI_IMAGE_MODEL || "gpt-image-2.5-sunburst";
+  process.env.OPENAI_IMAGE_MODEL || "gpt-image-2";
 
 const IMAGE_QUALITY =
   process.env.OPENAI_IMAGE_QUALITY || "low";
