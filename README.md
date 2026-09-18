@@ -1,36 +1,55 @@
-# Emi & Mark — Full AI RP Project
+# Emi & Mark — ChatGPT Scene Prompt Version
 
-Complete Vercel project with:
+This version keeps AI chat for Emi, but removes the OpenAI Images API completely.
 
-- AI roleplay chat
-- Full Emi / Mark canon story
-- Slow-burn relationship system
-- Daniel, Mia, Ryan side characters
-- Photo upload so Emi can see images
-- Scene image generation
-- Gift system with relationship bonuses
-- Browser save using localStorage + IndexedDB
-- Fixed Scene dialog buttons
+## Scene workflow
 
-## Important bug fix
+Press:
 
-The Scene dialog's X and Cancel buttons are explicitly `type="button"`.
+`🖼️ Scene`
 
-Only:
+The website automatically builds an image prompt from:
+- current story state
+- current relationship level
+- recent dialogue
+- Emi's appearance
+- Mark's appearance
+- your optional visual direction
 
-`generateSceneBtn`
+Then:
 
-can submit the Scene form. `app.js` also checks `event.submitter` as a second safety layer.
+1. Press **Copy Prompt**
+2. Press **Open ChatGPT**
+3. Paste the prompt into ChatGPT and generate the image there
+4. Return to the RP website
+5. Press **Upload Result**
+6. Select the generated image
+7. The image appears inside the RP timeline
+
+## Important
+
+The Scene system makes NO request to:
+
+`/api/scene-image`
+
+and makes NO request to:
+
+`/v1/images/generations`
+
+So your website does not spend OpenAI API image-generation credits.
+
+Your normal Emi conversation still uses:
+
+`api/chat.js`
+
+and therefore still uses your OpenAI API key for text/vision roleplay.
 
 ## GitHub structure
-
-Upload these files exactly:
 
 ```text
 RP-Emi/
 ├── api/
-│   ├── chat.js
-│   └── scene-image.js
+│   └── chat.js
 ├── app.js
 ├── index.html
 ├── style.css
@@ -39,29 +58,27 @@ RP-Emi/
 └── .env.example
 ```
 
+`api/scene-image.js` is intentionally removed.
+
 ## Vercel environment variables
 
-Required:
+Only these are needed for the RP chat:
 
 ```text
 OPENAI_API_KEY=...
 OPENAI_MODEL=gpt-5.6-luna
 ```
 
-Image generation:
+You can delete:
+- OPENAI_IMAGE_MODEL
+- OPENAI_IMAGE_QUALITY
 
-```text
-OPENAI_IMAGE_MODEL=gpt-image-2
-OPENAI_IMAGE_QUALITY=high
-```
+from Vercel if you no longer use any image API elsewhere.
 
-You may use `low`, `medium`, `high`, or another supported quality for your image model.
+## After deploying
 
-Do not put your real API key in GitHub.
-
-## After uploading
-
-1. Commit to `main`.
-2. Wait for Vercel to redeploy.
-3. Hard refresh the website with Ctrl+Shift+R.
-4. Click New Story once if an older browser save is still loaded.
+1. Commit all replacement files to `main`
+2. Delete `api/scene-image.js` from GitHub
+3. Wait for Vercel deployment
+4. Hard refresh with Ctrl+Shift+R
+5. Try the Scene button

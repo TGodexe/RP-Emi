@@ -59,7 +59,7 @@
         </div>
 
         <div class="topbar-actions">
-          <button id="sceneBtn" class="tool-btn" title="Generate current scene">🖼️ Scene</button>
+          <button id="sceneBtn" class="tool-btn" title="Create a ChatGPT image prompt">🖼️ Scene</button>
           <button id="giftBtn" class="tool-btn" title="Give Emi a gift">🎁 Gift</button>
           <button id="settingsBtn" class="icon-btn" aria-label="Settings">⚙</button>
         </div>
@@ -114,29 +114,51 @@
     </form>
   </dialog>
 
-  <!-- Scene image dialog -->
+  <!-- Scene prompt dialog -->
   <dialog id="sceneDialog">
-    <form method="dialog" class="modal-card" id="sceneForm">
+    <div class="modal-card">
       <div class="modal-head">
         <div>
-          <h2>Generate Scene Image</h2>
-          <p>Creates an anime image from the current RP scene.</p>
+          <h2>Scene Image Prompt</h2>
+          <p>No image API is used. Copy this prompt and generate the image in ChatGPT.</p>
         </div>
         <button id="closeSceneBtn" type="button" class="icon-btn">✕</button>
       </div>
 
       <label class="field">
         Optional direction
-        <textarea id="sceneNote" rows="3" placeholder="e.g. after school under cherry blossoms"></textarea>
+        <textarea id="sceneNote" rows="3" placeholder="e.g. morning classroom, soft sunlight"></textarea>
       </label>
 
-      <div class="cost-note">Image generation uses your OpenAI API credits.</div>
+      <div class="prompt-actions">
+        <button id="buildPromptBtn" type="button">Create Prompt</button>
+        <button id="copyPromptBtn" type="button" class="secondary-btn">📋 Copy Prompt</button>
+        <button id="openChatGPTBtn" type="button" class="secondary-btn">↗ Open ChatGPT</button>
+      </div>
+
+      <label class="field">
+        Generated prompt
+        <textarea id="scenePromptOutput" rows="12" readonly
+          placeholder="Press Create Prompt first..."></textarea>
+      </label>
+
+      <div class="scene-upload-box">
+        <div>
+          <strong>Finished generating in ChatGPT?</strong>
+          <p>Upload the result here to add it to the RP timeline.</p>
+        </div>
+        <button id="uploadSceneResultBtn" type="button">📤 Upload Result</button>
+        <input id="sceneResultInput" type="file" accept="image/*" hidden />
+      </div>
+
+      <div class="cost-note">
+        This mode does not call the OpenAI Images API. Image generation happens manually in ChatGPT.
+      </div>
 
       <div class="modal-actions">
-        <button id="cancelSceneBtn" type="button" class="secondary-btn">Cancel</button>
-        <button id="generateSceneBtn" type="submit">Generate</button>
+        <button id="cancelSceneBtn" type="button" class="secondary-btn">Close</button>
       </div>
-    </form>
+    </div>
   </dialog>
 
   <!-- Settings dialog -->

@@ -336,3 +336,57 @@ dialog::backdrop { background:rgba(0,0,0,.68); backdrop-filter:blur(3px); }
   .tool-btn::first-letter { font-size:18px; }
   .gift-grid { grid-template-columns:1fr; }
 }
+
+
+/* ChatGPT scene-prompt workflow */
+.prompt-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+#scenePromptOutput {
+  min-height: 240px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.scene-upload-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,.035);
+  border: 1px solid var(--border);
+}
+
+.scene-upload-box strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.scene-upload-box p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+@media (max-width: 620px) {
+  .prompt-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .scene-upload-box {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .scene-upload-box button {
+    width: 100%;
+  }
+}

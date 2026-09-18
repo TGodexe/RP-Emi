@@ -22,9 +22,13 @@ const closeGiftBtn = $("closeGiftBtn");
 
 const sceneBtn = $("sceneBtn");
 const sceneDialog = $("sceneDialog");
-const sceneForm = $("sceneForm");
 const sceneNote = $("sceneNote");
-const generateSceneBtn = $("generateSceneBtn");
+const scenePromptOutput = $("scenePromptOutput");
+const buildPromptBtn = $("buildPromptBtn");
+const copyPromptBtn = $("copyPromptBtn");
+const openChatGPTBtn = $("openChatGPTBtn");
+const uploadSceneResultBtn = $("uploadSceneResultBtn");
+const sceneResultInput = $("sceneResultInput");
 const closeSceneBtn = $("closeSceneBtn");
 const cancelSceneBtn = $("cancelSceneBtn");
 
@@ -566,10 +570,90 @@ async function giveGift(gift) {
   await requestAI(message);
 }
 
-// ---------- Scene image generation ----------
+// ---------- Scene prompt workflow (no Images API) ----------
+
+function relationshipStageForPrompt(value) {
+  if (value >= 90) return "Emi is fully aware she romantically loves Mark.";
+  if (value >= 80) return "Emi has realized she has romantic feelings for Mark.";
+  if (value >= 60) return "Emi is developing genuine romantic attraction toward Mark.";
+  if (value >= 40) return "Emi is questioning whether her feelings are more than friendship.";
+  if (value >= 20) return "Emi has subtle emotional curiosity beyond ordinary friendship.";
+  return "Emi sees Mark as her very close childhood best friend, with no romantic feelings yet.";
+}
+
+function buildScenePrompt() {
+  const recent = state.messages
+    .slice(-10)
+    .filter((m) => m.text)
+    .map((m) => {
+      const speaker = m.role === "user" ? "Mark" : (m.speaker || "Emi");
+      return `${speaker}: ${m.text}`;
+    })
+    .join("
+");
+
+  const direction = sceneNote.value.trim();
+
+  return `Create a polished anime-style visual-novel illustration of the CURRENT RP SCENE below.
+
+CHARACTER CONSISTENCY
+
+Emi Yukari:
+- short purple hair with soft bangs
+- small yellow hair clip on one side
+- bright blue expressive eyes
+- cute, warm, approachable face
+- white and light-lavender striped long-sleeve shirt
+- dark blue denim overalls
+- decorative star-shaped pins on the straps
+- golden heart-shaped pendant necklace given by Mark
+- gentle, friendly, emotionally observant personality
+
+Mark:
+- tall male, 6'2" / 188 cm
+- blonde hair
+- blue eyes
+- handsome
+- muscular and athletic physique
+- calm, thoughtful presence
+- likes philosophy, anime, comics, knowledge, and cats
+
+RELATIONSHIP
+${relationshipStageForPrompt(state.affection)}
+Current relationship value: ${state.affection}/100.
+
+CURRENT STORY
+${state.scene}
+
+RECENT DIALOGUE / ACTIONS
+${recent || "No recent dialogue available."}
+
+OPTIONAL VISUAL DIRECTION
+${direction || "Choose the most emotionally appropriate visual moment from the current scene."}
+
+ART DIRECTION
+- high-quality anime illustration
+- visual-novel key art
+- cinematic but soft natural lighting
+- detailed environment matching the story location
+- expressive but believable body language
+- preserve Emi and Mark's established designs
+- maintain continuity with the recent dialogue
+- no speech bubbles
+- no text captions
+- no UI elements
+- no watermark
+- no character-sheet layout
+- no sexualization
+- if the active timeline is high school, keep the scene wholesome and age-appropriate
+- do not make Emi and Mark physically or romantically closer than the current relationship stage justifies
+
+Create ONE finished scene image, not a collage.`;
+}
 
 sceneBtn.addEventListener("click", () => {
   sceneNote.value = "";
+  scenePromptOutput.value = buildScenePrompt();
   sceneDialog.showModal();
 });
 
@@ -581,60 +665,62 @@ cancelSceneBtn.addEventListener("click", () => {
   sceneDialog.close();
 });
 
-sceneForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
+buildPromptBtn.addEventListener("click", () => {
+  scenePromptOutput.value = buildScenePrompt();
+});
 
-  // Safety guard: only the Generate button may submit this form.
-  if (event.submitter?.id !== "generateSceneBtn") {
-    return;
-  }
-
-  generateSceneBtn.disabled = true;
-  generateSceneBtn.textContent = "Generating...";
+copyPromptBtn.addEventListener("click", async () => {
+  const prompt = scenePromptOutput.value.trim() || buildScenePrompt();
+  scenePromptOutput.value = prompt;
 
   try {
-    const recentMessages = state.messages
-      .slice(-12)
-      .map((m) => ({
-        speaker: m.role === "user" ? "Mark" : (m.speaker || "Emi"),
-        text: m.text || ""
-      }));
+    await navigator.clipboard.writeText(prompt);
+    const old = copyPromptBtn.textContent;
+    copyPromptBtn.textContent = "✓ Copied";
+    setTimeout(() => {
+      copyPromptBtn.textContent = old;
+    }, 1300);
+  } catch {
+    scenePromptOutput.focus();
+    scenePromptOutput.select();
+    document.execCommand("copy");
+  }
+});
 
-    const response = await fetch("/api/scene-image", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        scene: state.scene,
-        affection: state.affection,
-        note: sceneNote.value.trim(),
-        messages: recentMessages
-      })
-    });
+openChatGPTBtn.addEventListener("click", () => {
+  const prompt = scenePromptOutput.value.trim() || buildScenePrompt();
+  scenePromptOutput.value = prompt;
 
-    const data = await response.json();
+  navigator.clipboard?.writeText(prompt).catch(() => {});
+  window.open("https://chatgpt.com/", "_blank", "noopener,noreferrer");
+});
 
-    if (!response.ok) {
-      throw new Error(data?.error || `Image request failed (${response.status})`);
-    }
+uploadSceneResultBtn.addEventListener("click", () => {
+  sceneResultInput.click();
+});
 
-    const imageId = await putImage(data.image);
+sceneResultInput.addEventListener("change", async () => {
+  const file = sceneResultInput.files?.[0];
+  if (!file) return;
+
+  try {
+    const dataUrl = await compressImage(file);
+    const imageId = await putImage(dataUrl);
 
     state.messages.push({
       role: "assistant",
       speaker: "Scene",
       kind: "scene",
-      text: data.caption || "*A moment from the current story.*",
+      text: "*A visual moment from the current story, generated in ChatGPT.*",
       imageId
     });
 
+    sceneResultInput.value = "";
     save();
     await render();
     sceneDialog.close();
   } catch (error) {
-    alert(`Couldn't generate the scene: ${error.message}`);
-  } finally {
-    generateSceneBtn.disabled = false;
-    generateSceneBtn.textContent = "Generate";
+    alert(`Couldn't add the scene image: ${error.message}`);
   }
 });
 
