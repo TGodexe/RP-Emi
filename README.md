@@ -1,83 +1,67 @@
-# Emi RP — Scene Images + Photo Upload + Gift System
+# Emi & Mark — Full AI RP Project
 
-This patch is designed for your current Vercel/GitHub RP project.
+Complete Vercel project with:
 
-## New features
+- AI roleplay chat
+- Full Emi / Mark canon story
+- Slow-burn relationship system
+- Daniel, Mia, Ryan side characters
+- Photo upload so Emi can see images
+- Scene image generation
+- Gift system with relationship bonuses
+- Browser save using localStorage + IndexedDB
+- Fixed Scene dialog buttons
 
-### 1. Generate Scene
-A new **🖼️ Scene** button generates an anime illustration of the current roleplay scene.
+## Important bug fix
 
-The backend uses the OpenAI Image API at:
+The Scene dialog's X and Cancel buttons are explicitly `type="button"`.
 
-`POST /v1/images/generations`
+Only:
 
-Default model:
+`generateSceneBtn`
 
-`gpt-image-2.5-sunburst`
+can submit the Scene form. `app.js` also checks `event.submitter` as a second safety layer.
 
-Default quality:
+## GitHub structure
 
-`low`
+Upload these files exactly:
 
-### 2. Send a Photo
-The **📷** button lets Mark attach a real image.
-
-The browser:
-- compresses it before upload
-- stores it locally with IndexedDB
-- sends the latest image to `/api/chat`
-
-The chat backend passes it to the Responses API as an `input_image`, so Emi can respond to what is actually visible.
-
-### 3. Gift System
-The **🎁 Gift** button gives Emi one of several gifts.
-
-Each unique gift gives its relationship bonus once per story:
-- Lavender Notebook +1
-- Psychology Book +1
-- Handmade Bookmark +2
-- Small Bouquet +2
-- Star Charm +1
-- Study Snack +1
-
-Repeated gifts can still be roleplayed, but do not endlessly farm relationship points.
-
-## Install
-
-Replace these files in the root of your GitHub repo:
-
-- `index.html`
-- `style.css`
-- `app.js`
-
-Replace:
-
-- `api/chat.js`
-
-Add:
-
-- `api/scene-image.js`
-
-Commit the changes to `main`. Vercel should redeploy automatically.
+```text
+RP-Emi/
+├── api/
+│   ├── chat.js
+│   └── scene-image.js
+├── app.js
+├── index.html
+├── style.css
+├── package.json
+├── vercel.json
+└── .env.example
+```
 
 ## Vercel environment variables
 
-You already need:
+Required:
 
-- `OPENAI_API_KEY`
-- `OPENAI_MODEL`
+```text
+OPENAI_API_KEY=...
+OPENAI_MODEL=gpt-5.6-luna
+```
 
-Optional image settings:
+Image generation:
 
-- `OPENAI_IMAGE_MODEL=gpt-image-2.5-sunburst`
-- `OPENAI_IMAGE_QUALITY=low`
+```text
+OPENAI_IMAGE_MODEL=gpt-image-2
+OPENAI_IMAGE_QUALITY=high
+```
 
-If you do not add the optional variables, the backend uses those defaults automatically.
+You may use `low`, `medium`, `high`, or another supported quality for your image model.
 
-## Important
+Do not put your real API key in GitHub.
 
-After deployment, click **New Story** once so the updated local story state is initialized.
+## After uploading
 
-Generated images and uploaded photos are stored in the browser using IndexedDB, not in GitHub.
-
-Image generation uses OpenAI API credits.
+1. Commit to `main`.
+2. Wait for Vercel to redeploy.
+3. Hard refresh the website with Ctrl+Shift+R.
+4. Click New Story once if an older browser save is still loaded.

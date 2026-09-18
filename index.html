@@ -108,7 +108,7 @@
           <h2>Give Emi a Gift</h2>
           <p>Each unique gift gives its relationship bonus once per story.</p>
         </div>
-        <button class="icon-btn" value="cancel">✕</button>
+        <button id="closeGiftBtn" type="button" class="icon-btn">✕</button>
       </div>
       <div id="giftGrid" class="gift-grid"></div>
     </form>
@@ -144,7 +144,7 @@
     <form method="dialog" class="modal-card">
       <div class="modal-head">
         <h2>Story Settings</h2>
-        <button class="icon-btn" value="cancel">✕</button>
+        <button id="closeSettingsBtn" type="button" class="icon-btn">✕</button>
       </div>
 
       <label class="field">
@@ -158,7 +158,7 @@
       </label>
 
       <div class="modal-actions">
-        <button value="cancel" class="secondary-btn">Cancel</button>
+        <button id="cancelSettingsBtn" type="button" class="secondary-btn">Cancel</button>
         <button id="saveSettingsBtn" type="submit">Save</button>
       </div>
     </form>

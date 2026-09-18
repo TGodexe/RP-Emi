@@ -18,20 +18,23 @@ const removeAttachmentBtn = $("removeAttachmentBtn");
 const giftBtn = $("giftBtn");
 const giftDialog = $("giftDialog");
 const giftGrid = $("giftGrid");
+const closeGiftBtn = $("closeGiftBtn");
 
-const closeSceneBtn = $("closeSceneBtn");
-const cancelSceneBtn = $("cancelSceneBtn");
 const sceneBtn = $("sceneBtn");
 const sceneDialog = $("sceneDialog");
 const sceneForm = $("sceneForm");
 const sceneNote = $("sceneNote");
 const generateSceneBtn = $("generateSceneBtn");
+const closeSceneBtn = $("closeSceneBtn");
+const cancelSceneBtn = $("cancelSceneBtn");
 
 const settingsBtn = $("settingsBtn");
 const settingsDialog = $("settingsDialog");
 const sceneInput = $("sceneInput");
 const affectionInput = $("affectionInput");
 const saveSettingsBtn = $("saveSettingsBtn");
+const closeSettingsBtn = $("closeSettingsBtn");
+const cancelSettingsBtn = $("cancelSettingsBtn");
 
 const clearBtn = $("clearBtn");
 const newStoryBtn = $("newStoryBtn");
@@ -529,6 +532,10 @@ giftBtn.addEventListener("click", () => {
   giftDialog.showModal();
 });
 
+closeGiftBtn.addEventListener("click", () => {
+  giftDialog.close();
+});
+
 async function giveGift(gift) {
   giftDialog.close();
 
@@ -566,8 +573,21 @@ sceneBtn.addEventListener("click", () => {
   sceneDialog.showModal();
 });
 
+closeSceneBtn.addEventListener("click", () => {
+  sceneDialog.close();
+});
+
+cancelSceneBtn.addEventListener("click", () => {
+  sceneDialog.close();
+});
+
 sceneForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+
+  // Safety guard: only the Generate button may submit this form.
+  if (event.submitter?.id !== "generateSceneBtn") {
+    return;
+  }
 
   generateSceneBtn.disabled = true;
   generateSceneBtn.textContent = "Generating...";
@@ -624,6 +644,14 @@ settingsBtn.addEventListener("click", () => {
   sceneInput.value = state.scene;
   affectionInput.value = state.affection;
   settingsDialog.showModal();
+});
+
+closeSettingsBtn.addEventListener("click", () => {
+  settingsDialog.close();
+});
+
+cancelSettingsBtn.addEventListener("click", () => {
+  settingsDialog.close();
 });
 
 saveSettingsBtn.addEventListener("click", (event) => {

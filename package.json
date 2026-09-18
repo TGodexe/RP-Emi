@@ -1,12 +1,9 @@
 {
-  "name": "emi-ai-rp",
-  "version": "1.0.0",
+  "name": "emi-mark-ai-roleplay",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
-  "scripts": {
-    "dev": "vercel dev"
-  },
-  "devDependencies": {
-    "vercel": "^50.0.0"
+  "engines": {
+    "node": "22.x"
   }
 }
