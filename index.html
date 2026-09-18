@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#17111f" />
+  <title>Emi & Mark — Interactive RP</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-block">
+        <div class="brand-mark">E</div>
+        <div>
+          <h1>Emi & Mark</h1>
+          <p>Interactive RP Story</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Relationship</div>
+        <div class="meter-row">
+          <span>Emi</span>
+          <span id="affectionLabel">Best Friend</span>
+        </div>
+        <div class="meter"><div id="affectionFill"></div></div>
+        <div class="tiny" id="affectionValue">0 / 100</div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">Story</div>
+        <div class="stat"><span>Chapter</span><strong id="chapterLabel">1</strong></div>
+        <div class="stat"><span>Day</span><strong id="dayLabel">1</strong></div>
+        <div class="stat"><span>Route</span><strong id="routeLabel">Friendship</strong></div>
+      </div>
+
+      <div class="panel cast-panel">
+        <div class="panel-title">Cast</div>
+        <div class="cast-item"><span class="dot emi-dot"></span><span>Emi Yukari</span></div>
+        <div class="cast-item"><span class="dot mark-dot"></span><span>Mark</span></div>
+        <div class="cast-item"><span class="dot daniel-dot"></span><span>Daniel</span></div>
+        <div class="cast-item"><span class="dot mia-dot"></span><span>Mia</span></div>
+        <div class="cast-item"><span class="dot ryan-dot"></span><span>Ryan</span></div>
+      </div>
+
+      <div class="sidebar-actions">
+        <button id="saveBtn" class="ghost-btn">Save</button>
+        <button id="resetBtn" class="danger-btn">Reset</button>
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="topbar">
+        <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
+        <div>
+          <div class="eyebrow">Final Year of High School</div>
+          <div class="scene-title" id="sceneTitle">Monday Morning — Classroom</div>
+        </div>
+        <div class="topbar-right">
+          <span class="status-dot"></span>
+          <span>Local story</span>
+        </div>
+      </header>
+
+      <section id="chat" class="chat" aria-live="polite"></section>
+
+      <section id="choices" class="choices"></section>
+
+      <footer class="composer">
+        <div class="composer-note">You are Mark. Actions can be written like <em>*looks away*</em>.</div>
+        <div class="composer-row">
+          <textarea id="messageInput" rows="1" placeholder="Type as Mark..."></textarea>
+          <button id="sendBtn" class="send-btn">Send</button>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
