@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#17121f" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#100d16" />
   <title>Emi & Mark — AI Roleplay</title>
-  <link rel="stylesheet" href="/style.css" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -24,17 +24,13 @@
           <span id="relationshipLabel">Best Friends</span>
           <span id="affectionValue">12%</span>
         </div>
-        <div class="meter">
-          <div id="affectionBar" class="meter-fill"></div>
-        </div>
-        <p class="muted small">
-          Slow-burn mode: Emi starts with no romantic feelings for Mark.
-        </p>
+        <div class="meter"><div id="affectionBar" class="meter-fill"></div></div>
+        <p class="muted small">Slow-burn relationship. Gifts help, but cannot force love.</p>
       </section>
 
       <section class="card">
         <div class="card-title">Current Story</div>
-        <p id="storyState" class="small">Final year of high school.</p>
+        <p id="storyState" class="small"></p>
       </section>
 
       <section class="card">
@@ -61,62 +57,113 @@
             <div class="status"><span class="status-dot"></span> in character</div>
           </div>
         </div>
-        <button id="settingsBtn" class="icon-btn" aria-label="Settings">⚙</button>
+
+        <div class="topbar-actions">
+          <button id="sceneBtn" class="tool-btn" title="Generate current scene">🖼️ Scene</button>
+          <button id="giftBtn" class="tool-btn" title="Give Emi a gift">🎁 Gift</button>
+          <button id="settingsBtn" class="icon-btn" aria-label="Settings">⚙</button>
+        </div>
       </header>
 
       <section id="chat" class="chat" aria-live="polite"></section>
 
       <div id="typing" class="typing hidden">
         <div class="avatar avatar-emi mini">E</div>
-        <div class="typing-bubble">
-          <span></span><span></span><span></span>
+        <div class="typing-bubble"><span></span><span></span><span></span></div>
+      </div>
+
+      <div id="attachmentPreview" class="attachment-preview hidden">
+        <img id="attachmentThumb" alt="Selected attachment" />
+        <div>
+          <strong>Photo attached</strong>
+          <small>Emi will be able to see it.</small>
         </div>
+        <button id="removeAttachmentBtn" class="mini-danger" aria-label="Remove attachment">✕</button>
       </div>
 
       <footer class="composer">
         <div class="composer-row">
-          <textarea id="messageInput" rows="1" maxlength="4000"
-            placeholder="Say something as Mark..."></textarea>
+          <button id="photoBtn" class="attach-btn" title="Send a photo">📷</button>
+          <input id="photoInput" type="file" accept="image/*" hidden />
+
+          <textarea
+            id="messageInput"
+            rows="1"
+            maxlength="4000"
+            placeholder="Say something as Mark..."
+          ></textarea>
+
           <button id="sendBtn" class="send-btn" aria-label="Send">➤</button>
         </div>
-        <div class="composer-hint">Enter to send · Shift+Enter for a new line</div>
+        <div class="composer-hint">Enter to send · Shift+Enter for a new line · 📷 sends a photo</div>
       </footer>
     </main>
   </div>
 
-  <dialog id="settingsDialog">
-    <form method="dialog" class="settings">
-      <div class="settings-head">
-        <h2>Story Settings</h2>
-        <button class="icon-btn">✕</button>
+  <!-- Gift dialog -->
+  <dialog id="giftDialog">
+    <form method="dialog" class="modal-card">
+      <div class="modal-head">
+        <div>
+          <h2>Give Emi a Gift</h2>
+          <p>Each unique gift gives its relationship bonus once per story.</p>
+        </div>
+        <button class="icon-btn" value="cancel">✕</button>
+      </div>
+      <div id="giftGrid" class="gift-grid"></div>
+    </form>
+  </dialog>
+
+  <!-- Scene image dialog -->
+  <dialog id="sceneDialog">
+    <form method="dialog" class="modal-card" id="sceneForm">
+      <div class="modal-head">
+        <div>
+          <h2>Generate Scene Image</h2>
+          <p>Creates an anime image from the current RP scene.</p>
+        </div>
+        <button class="icon-btn" value="cancel">✕</button>
       </div>
 
-      <label>
-        Scene
-        <textarea id="sceneInput" rows="4"></textarea>
+      <label class="field">
+        Optional direction
+        <textarea id="sceneNote" rows="3" placeholder="e.g. after school under cherry blossoms"></textarea>
       </label>
 
-      <label>
+      <div class="cost-note">Image generation uses your OpenAI API credits.</div>
+
+      <div class="modal-actions">
+        <button value="cancel" class="secondary-btn">Cancel</button>
+        <button id="generateSceneBtn" type="submit">Generate</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Settings dialog -->
+  <dialog id="settingsDialog">
+    <form method="dialog" class="modal-card">
+      <div class="modal-head">
+        <h2>Story Settings</h2>
+        <button class="icon-btn" value="cancel">✕</button>
+      </div>
+
+      <label class="field">
+        Scene
+        <textarea id="sceneInput" rows="5"></textarea>
+      </label>
+
+      <label class="field">
         Emi → Mark affection (0–100)
         <input id="affectionInput" type="number" min="0" max="100" />
       </label>
 
-      <label>
-        AI endpoint
-        <input id="endpointInput" type="text" value="/api/chat" />
-      </label>
-
-      <p class="muted small">
-        Keep /api/chat when the frontend and backend are deployed together on Vercel.
-      </p>
-
-      <menu>
+      <div class="modal-actions">
         <button value="cancel" class="secondary-btn">Cancel</button>
-        <button id="saveSettingsBtn" value="default">Save</button>
-      </menu>
+        <button id="saveSettingsBtn" type="submit">Save</button>
+      </div>
     </form>
   </dialog>
 
-  <script src="/app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
