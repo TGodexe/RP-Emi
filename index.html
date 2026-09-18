@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#17121f" />
+  <title>Emi & Mark — AI Roleplay</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">E</div>
+        <div>
+          <h1>Emi & Mark</h1>
+          <p>AI Roleplay</p>
+        </div>
+      </div>
+
+      <section class="card relationship-card">
+        <div class="card-title">Relationship</div>
+        <div class="relationship-row">
+          <span id="relationshipLabel">Best Friends</span>
+          <span id="affectionValue">12%</span>
+        </div>
+        <div class="meter">
+          <div id="affectionBar" class="meter-fill"></div>
+        </div>
+        <p class="muted small">
+          Slow-burn mode: Emi starts with no romantic feelings for Mark.
+        </p>
+      </section>
+
+      <section class="card">
+        <div class="card-title">Current Story</div>
+        <p id="storyState" class="small">Final year of high school.</p>
+      </section>
+
+      <section class="card">
+        <div class="card-title">Characters</div>
+        <div class="character-pill"><span>💜</span> Emi Yukari</div>
+        <div class="character-pill"><span>⭐</span> Mark</div>
+        <div class="character-pill"><span>🔷</span> Daniel</div>
+        <div class="character-pill"><span>🌸</span> Mia</div>
+        <div class="character-pill"><span>🟢</span> Ryan</div>
+      </section>
+
+      <div class="sidebar-actions">
+        <button id="newStoryBtn" class="secondary-btn">New Story</button>
+        <button id="clearBtn" class="danger-btn">Clear Chat</button>
+      </div>
+    </aside>
+
+    <main class="chat-panel">
+      <header class="topbar">
+        <div class="topbar-character">
+          <div class="avatar avatar-emi">E</div>
+          <div>
+            <strong>Emi Yukari</strong>
+            <div class="status"><span class="status-dot"></span> in character</div>
+          </div>
+        </div>
+        <button id="settingsBtn" class="icon-btn" aria-label="Settings">⚙</button>
+      </header>
+
+      <section id="chat" class="chat" aria-live="polite"></section>
+
+      <div id="typing" class="typing hidden">
+        <div class="avatar avatar-emi mini">E</div>
+        <div class="typing-bubble">
+          <span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <footer class="composer">
+        <div class="composer-row">
+          <textarea id="messageInput" rows="1" maxlength="4000"
+            placeholder="Say something as Mark..."></textarea>
+          <button id="sendBtn" class="send-btn" aria-label="Send">➤</button>
+        </div>
+        <div class="composer-hint">Enter to send · Shift+Enter for a new line</div>
+      </footer>
+    </main>
+  </div>
+
+  <dialog id="settingsDialog">
+    <form method="dialog" class="settings">
+      <div class="settings-head">
+        <h2>Story Settings</h2>
+        <button class="icon-btn">✕</button>
+      </div>
+
+      <label>
+        Scene
+        <textarea id="sceneInput" rows="4"></textarea>
+      </label>
+
+      <label>
+        Emi → Mark affection (0–100)
+        <input id="affectionInput" type="number" min="0" max="100" />
+      </label>
+
+      <label>
+        AI endpoint
+        <input id="endpointInput" type="text" value="/api/chat" />
+      </label>
+
+      <p class="muted small">
+        Keep /api/chat when the frontend and backend are deployed together on Vercel.
+      </p>
+
+      <menu>
+        <button value="cancel" class="secondary-btn">Cancel</button>
+        <button id="saveSettingsBtn" value="default">Save</button>
+      </menu>
+    </form>
+  </dialog>
+
+  <script src="/app.js"></script>
+</body>
+</html>
